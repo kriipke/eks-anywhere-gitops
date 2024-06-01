@@ -1,0 +1,93 @@
+clusters/$MANAGEMENT_CLUSTER_NAME
+Type: string
+clusterConfigPath
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+  name: dc00-mgmt
+spec:
+  controlPlaneConfiguration:
+    count: 3
+    endpoint:
+      host: "10.20.30.40"
+      port: "6443"
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: dc00-mgmt
+  dataPlaneConfiguration:
+    workerNodeGroupConfigurations:
+      - count: 3
+        machineGroupRef:
+          kind: VSphereMachineConfig
+          name: dc00-mgmt-md
+        autoscaling:
+          minSize: 1
+          maxSize: 5
+          maxSurge: 1
+          maxUnavailable: 0
+  etcdConfiguration:
+    count: 3
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: dc00-etcd
+  gitOpsRef:
+    kind: FluxConfig
+    name: dc00-mgmt
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: dc00-mgmt
+spec:
+  datacenter: "Datacenter"
+  datastore: "Datastore"
+  diskGiB: 25
+  folder: "Folder"
+  memoryMiB: 8192
+  network: "Network"
+  numCPUs: 2
+  resourcePool: "ResourcePool"
+  server: "vcenter.example.com"
+  template: "Template"
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: dc00-mgmt-md
+spec:
+  datacenter: "Datacenter"
+  datastore: "Datastore"
+  diskGiB: 25
+  folder: "Folder"
+  memoryMiB: 8192
+  network: "Network"
+  numCPUs: 2
+  resourcePool: "ResourcePool"
+  server: "vcenter.example.com"
+  template: "Template"
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: dc00-etcd
+spec:
+  datacenter: "Datacenter"
+  datastore: "Datastore"
+  diskGiB: 25
+  folder: "Folder"
+  memoryMiB: 8192
+  network: "Network"
+  numCPUs: 2
+  resourcePool: "ResourcePool"
+  server: "vcenter.example.com"
+  template: "Template"
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: FluxConfig
+metadata:
+  name: dc00-mgmt
+spec:
+  github:
+    personal: true
+    repository: eks-anywhere-gitops
+    owner: kriipke
