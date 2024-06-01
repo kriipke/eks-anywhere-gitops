@@ -21,7 +21,9 @@ jobs:
           manifests: |
             bootstrap/*
             clusters/*/*
-
+      - run: ls .
+      - run: $(pwd)
+      
       - name: Run kube-score conformance tests
         uses: kube-score/check-action@v1.10.0
         with:
