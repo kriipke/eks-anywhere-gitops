@@ -24,7 +24,7 @@ jobs:
         with:
           # Adjust this directory to the location where your kubernetes resources and helm charts are located.
           directory: sample/valid-yaml
-          config: .kube-linter.yaml
+          config: .kube-linter
           format: sarif
           output-file: ../results/kube-linter.sarif
         continue-on-error: true
