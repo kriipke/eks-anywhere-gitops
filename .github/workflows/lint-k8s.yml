@@ -16,7 +16,7 @@ jobs:
       - name: Verify kube-linter-action succeeded
         shell: bash
         run: |
-          CWD: "$(pwd)" 
+          "$(pwd)" 
           ls -alhF
           cat .kube-linter
       
