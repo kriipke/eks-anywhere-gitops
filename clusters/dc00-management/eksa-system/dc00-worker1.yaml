@@ -1,7 +1,7 @@
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: Cluster
 metadata:
-  name: dc00-management
+  name: dc00-worker1
 spec:
   controlPlaneConfiguration:
     count: 3
@@ -10,13 +10,13 @@ spec:
       port: "6443"
     machineGroupRef:
       kind: VSphereMachineConfig
-      name: dc00-management
+      name: dc00-worker1
   dataPlaneConfiguration:
     workerNodeGroupConfigurations:
       - count: 3
         machineGroupRef:
           kind: VSphereMachineConfig
-          name: dc00-management-md
+          name: dc00-worker1-md
         autoscaling:
           minSize: 1
           maxSize: 5
@@ -29,12 +29,12 @@ spec:
       name: dc00-etcd
   gitOpsRef:
     kind: FluxConfig
-    name: dc00-management
+    name: dc00-worker1
 ---
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: dc00-management
+  name: dc00-worker1
 spec:
   datacenter: "Datacenter"
   datastore: "Datastore"
@@ -50,7 +50,7 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: dc00-management-md
+  name: dc00-worker1-md
 spec:
   datacenter: "Datacenter"
   datastore: "Datastore"
@@ -82,10 +82,10 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: FluxConfig
 metadata:
-  name: dc00-management
+  name: dc00-worker1
 spec:
   systemNamespace: "eksa-system"
-  clusterConfigPath: "clusters/dc00-management"
+  clusterConfigPath: "clusters/dc00-worker1"
   branch: "main"
   github:
     personal: true
