@@ -1,10 +1,7 @@
-clusters/$MANAGEMENT_CLUSTER_NAME
-Type: string
-clusterConfigPath
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: Cluster
 metadata:
-  name: dc00-mgmt
+  name: dc00-management
 spec:
   controlPlaneConfiguration:
     count: 3
@@ -13,13 +10,13 @@ spec:
       port: "6443"
     machineGroupRef:
       kind: VSphereMachineConfig
-      name: dc00-mgmt
+      name: dc00-management
   dataPlaneConfiguration:
     workerNodeGroupConfigurations:
       - count: 3
         machineGroupRef:
           kind: VSphereMachineConfig
-          name: dc00-mgmt-md
+          name: dc00-management-md
         autoscaling:
           minSize: 1
           maxSize: 5
@@ -32,12 +29,12 @@ spec:
       name: dc00-etcd
   gitOpsRef:
     kind: FluxConfig
-    name: dc00-mgmt
+    name: dc00-management
 ---
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: dc00-mgmt
+  name: dc00-management
 spec:
   datacenter: "Datacenter"
   datastore: "Datastore"
@@ -53,7 +50,7 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: dc00-mgmt-md
+  name: dc00-management-md
 spec:
   datacenter: "Datacenter"
   datastore: "Datastore"
@@ -85,8 +82,18 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: FluxConfig
 metadata:
-  name: dc00-mgmt
+  name: dc00-management
 spec:
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: FluxConfig
+metadata:
+  name: my-github-flux-provider
+  namespace: default
+spec:
+  systemNamespace: "eksa-system"
+  clusterConfigPath: "clusters/dc00-management"
+  branch: "main"
   github:
     personal: true
     repository: eks-anywhere-gitops

@@ -1,0 +1,32 @@
+name: Lint K8s and YAML
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Lint K8s and YAML
+        uses: azure/k8s-lint@v1
+        with:
+          manifests: |
+            bootstrap/cluster.yaml
+            bootstrap/vspheremachineconfig.yaml
+            bootstrap/vsphere.yaml
+
+      - name: Run kube-score conformance tests
+        uses: kube-score/check-action@v1.10.0
+        with:
+          files: |
+            bootstrap/cluster.yaml
+            bootstrap/vspheremachineconfig.yaml
+            bootstrap/vsphere.yaml
