@@ -1,0 +1,20 @@
+  test: 
+    steps:
+    - uses: actions/checkout@v4
+    - uses: yokawasa/action-setup-kube-tools@v0.11.1
+      with:
+        arch-type: 'amd64'
+        setup-tools: |
+          kubectl
+          helm
+          kustomize
+          skaffold
+        kubectl: '1.25'
+        helm: '3.11.1'
+        kustomize: '5.0.0'
+        skaffold: '2.1.0'
+    - run: |
+        kubectl version --client
+        kustomize version
+        helm version
+        skaffold version
